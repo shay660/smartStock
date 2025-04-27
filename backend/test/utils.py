@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from ..main import app
 from ..database import Base
 from ..models import Users
+from ..routers.auth import bcrypt_context
 
 SQLALCHEMY_TEST_DB_URL = "sqlite:///./testdb.db"
 
@@ -35,7 +36,7 @@ def test_user():
         user = Users(id=1, username="Shay660test",
                      email="shay660test@gmail.com",
                      first_name="Shay", last_name="Itzhaki",
-                     hashed_password="test123",
+                     hashed_password=bcrypt_context.hash("test123"),
                      phone_number="054-5841875")
         db = TestSession()
         db.add(user)

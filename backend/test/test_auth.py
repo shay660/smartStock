@@ -1,13 +1,9 @@
-import sys
-import os
-
-# sys.path.append(os.path.dirname(__file__))
-# print(sys.path)
+from fastapi.security import OAuth2PasswordRequestForm
 
 from .utils import *
 from fastapi import status
 
-from ..routers.auth import get_db
+from ..routers.auth import get_db, authenticate_user
 
 app.dependency_overrides[get_db] = override_get_db
 
@@ -27,4 +23,25 @@ def test_create_user(test_user):
     assert new_user.first_name == request.get("first_name")
     assert new_user.last_name == request.get("last_name")
     assert new_user.phone_number == request.get("phone_number")
+
+
+def test_authenticate_user(test_user):
+    db = TestSession()
+    username = "Shay660test"
+    password = "test123"
+    form_data = OAuth2PasswordRequestForm(username=username, password=password)
+    user: Users = authenticate_user(db, form_data)
+    assert user and user.id == 1
+
+    wrong_username = "wrongUser"
+    form_data = OAuth2PasswordRequestForm(username=wrong_username,
+                                          password=password)
+    wrong_user = authenticate_user(db, form_data)
+    assert wrong_user is None
+
+    wrong_password = "aaaa"
+    form_data = OAuth2PasswordRequestForm(username=username,
+                                          password=wrong_password)
+    wrong_user = authenticate_user(db, form_data)
+    assert wrong_user is None
 

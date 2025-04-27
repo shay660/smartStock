@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 import uvicorn
 
-from .routers import auth
-from .database import engine, Base
+from backend.routers import auth
+from backend.database import engine, Base
 
 app = FastAPI()
 

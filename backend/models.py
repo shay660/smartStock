@@ -1,4 +1,4 @@
-from .database import Base
+from backend.database import Base
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date, \
     Float, UniqueConstraint
 
@@ -24,12 +24,15 @@ class Products(Base):
 
 
 class ProductData(Base):
+    """save data on the product per month like number of sales and price."""
+
     __tablename__ = "products_data"
 
-    id = Column(Integer, ForeignKey("products.id"), primary_key=True, index=True)
-    month = Column(Date, nullable=False)
+    id = Column(Integer, ForeignKey("products.id"), index=True, primary_key=True)
+    month = Column(Date, nullable=False, primary_key=True)
     sells = Column(Integer)
     price = Column(Float)
+    on_sale = Column(Boolean, default=False)
 
-    __table_args__ = (UniqueConstraint('id', 'month',
-                                       name='_product_month_uc'), )
+    # __table_args__ = (UniqueConstraint('id', 'month',
+    #                                    name='_product_month_uc'), )
